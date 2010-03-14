@@ -1,0 +1,16 @@
+wget http://personal.smartt.com/~brianp/images/hum.aif
+wget http://personal.smartt.com/~brianp/images/baby.aif
+wget http://personal.smartt.com/~brianp/images/babymom.aif
+wget http://personal.smartt.com/~brianp/images/mom.aif
+wget http://personal.smartt.com/~brianp/images/weanedhums.aif
+wget http://personal.smartt.com/~brianp/images/hummun.aif
+wget http://personal.smartt.com/~brianp/images/humw.aif
+wget http://personal.smartt.com/~brianp/images/growling.aif
+wget http://personal.smartt.com/~brianp/images/orgle.aif
+wget http://personal.smartt.com/~brianp/images/alarm.aif
+wget http://personal.smartt.com/~brianp/images/snort.aif
+wget http://personal.smartt.com/~brianp/images/cluck.aif
+wget http://personal.smartt.com/~brianp/images/clucksnort.aif
+wget http://personal.smartt.com/~brianp/images/fight.aif
+wget http://personal.smartt.com/~brianp/images/scream.aif
+wget http://personal.smartt.com/~brianp/images/spit.aif
