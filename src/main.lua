@@ -8,8 +8,7 @@ llama = {}
 
 function love.load()
     math.randomseed( os.time() )
-    -- Fat lines.
-    love.graphics.setLineWidth(2)
+    love.graphics.setLineWidth(2) -- Fat lines.
 	  font = love.graphics.newFont(love._vera_ttf, 20)
 	  love.graphics.setFont(font)
 	  love.graphics.setColor(200, 200, 200);
@@ -42,7 +41,6 @@ function love.load()
     addball(balldefs[1], 5) -- Add 5 big.
     --addball(balldefs[3], 25) -- Add 50 pink.
  
-
     -- ground
     ground.b = love.physics.newBody( world, 0, 0, 0 )
     ground.s = love.physics.newRectangleShape( ground.b, 400, 580, 800, 12)
@@ -58,6 +56,7 @@ function love.load()
     llama.b = love.physics.newBody( world, 420, 520, 0)
     llama.i = images.llama
     llama.otype = "llama"
+    llama.looking = 1 -- llama is looking left
     llama.ox = llama.i:getWidth() / 2
     llama.oy = llama.i:getHeight() / 2
     llama.s = love.physics.newRectangleShape( llama.b, 0, 0, llama.i:getWidth(), llama.i:getHeight())
@@ -87,6 +86,17 @@ function love.update(dt)
         table.remove(systems, i)
       end
     end
+
+    -- input
+    if love.keyboard.isDown("left") then
+      flip_llama("left")
+    end
+    if love.keyboard.isDown("right") then
+      flip_llama("right")
+    end
+    if love.keyboard.isDown("space") then
+      print("space")
+    end
 end
 
 function love.draw()
@@ -111,7 +121,7 @@ function love.draw()
         love.graphics.draw(v.i, v.b:getX(), v.b:getY(), v.b:getAngle(), 1, 1, v.ox, v.oy)
     end
 
-    love.graphics.draw(llama.i, llama.b:getX(), llama.b:getY(), 0 , 1, 1, llama.ox, llama.oy)
+    love.graphics.draw(llama.i, llama.b:getX(), llama.b:getY(), 0 , llama.looking, 1, llama.ox, llama.oy)
 
     for i,v in ipairs(systems) do
         love.graphics.draw(v, 0, 0)
@@ -192,4 +202,12 @@ function explosion(x, y)
 	p:setTangentialAcceleration(1000)
 	p:start()
  table.insert(systems, p)
+end
+
+function flip_llama(orientation)
+  if (llama.looking == 1 and orientation == "right") then
+    llama.looking = -1
+  elseif (llama.looking == -1 and orientation == "left") then
+    llama.looking = 1
+  end
 end
