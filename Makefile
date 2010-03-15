@@ -9,6 +9,7 @@ build: clean
 	cp img/blue_sky_800x600.jpg build/img/background.jpg
 	cp img/part1.png build/img/part1.png
 	cp img/insel/insel2.png build/img/island.png
+	cp img/llama/llama2_bs.png build/img/llama.png
 	
 	cd build && zip -r ../p1.zip *
 	mv p1.zip p1.love

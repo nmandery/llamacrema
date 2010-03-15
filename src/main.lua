@@ -1,13 +1,10 @@
--- Example: Avalanche of LOVE
-
-require("os")
-
 -- Contains all the balls.
 balls = {}
 ground = {}
 islands = {}
 systems = {}
 points = 0
+llama = {}
 
 function love.load()
     math.randomseed( os.time() )
@@ -23,6 +20,7 @@ function love.load()
         island = love.graphics.newImage("img/island.png"),
         schlagsahne = love.graphics.newImage("img/schlagsahne.png"),
         part1 = love.graphics.newImage("img/part1.png"),
+        llama = love.graphics.newImage("img/llama.png"),
     }
     
     -- Image / radius pairs.
@@ -55,8 +53,16 @@ function love.load()
     for i=1,5 do
 			  addisland(math.random(0, 800), math.random(0, 400))
     end
-    --addisland(450,350)
 
+    -- llama
+    llama.b = love.physics.newBody( world, 420, 520, 0)
+    llama.i = images.llama
+    llama.otype = "llama"
+    llama.ox = llama.i:getWidth() / 2
+    llama.oy = llama.i:getHeight() / 2
+    llama.s = love.physics.newRectangleShape( llama.b, 0, 0, llama.i:getWidth(), llama.i:getHeight())
+    llama.s:setData(llama)
+    llama.b:setPosition(420, 520)
 end
 
 function love.update(dt)
@@ -77,7 +83,7 @@ function love.update(dt)
 
     for i,v in ipairs(systems) do
       v:update(dt)
-      if v:isFull() then
+      if v:isFull() then  -- remove finished particlesystems
         table.remove(systems, i)
       end
     end
@@ -105,6 +111,8 @@ function love.draw()
         love.graphics.draw(v.i, v.b:getX(), v.b:getY(), v.b:getAngle(), 1, 1, v.ox, v.oy)
     end
 
+    love.graphics.draw(llama.i, llama.b:getX(), llama.b:getY(), 0 , 1, 1, llama.ox, llama.oy)
+
     for i,v in ipairs(systems) do
         love.graphics.draw(v, 0, 0)
     end
@@ -122,7 +130,6 @@ function addisland(x, y, r)
 end
 
 
--- Adds X balls.
 function addball(def, num)
     for i=1,num do
       local x, y = math.random(0, 800), -math.random(100, 1500)
@@ -142,11 +149,15 @@ end
 function collide(a, b, coll)
   if a and b then
     if (a.otype == "ground") and (b.otype == "object") then
-      explosion(b.b:getX(), b.b:getY())
-      --for k,v in pairs(b) do
-      --  print(k,v)
-      --end
+      explode_object(b.b)
+    elseif (a.otype == "object") and (b.otype == "ground") then
+      explode_object(a.b)
+    elseif (a.otype == "object") and (b.otype == "llama") then
+      a.b:setPosition( math.random(0, 800), -math.random(100, 1500))
+      points = points + 1
+    elseif (a.otype == "llama") and (b.otype == "object") then
       b.b:setPosition( math.random(0, 800), -math.random(100, 1500))
+      points = points + 1
     end
   end
 end
@@ -156,6 +167,14 @@ end
 function untouch(a, b, coll)
 end
 function result(a, b, coll)
+end
+
+function explode_object(ob)
+  explosion(ob:getX(), ob:getY())
+  ob:setPosition( math.random(0, 800), -math.random(100, 1500))
+
+  -- every destroyed object subtracts one point
+  points = points - 1
 end
 
 function explosion(x, y)
@@ -172,6 +191,5 @@ function explosion(x, y)
 	p:setSpread(360)
 	p:setTangentialAcceleration(1000)
 	p:start()
- 
  table.insert(systems, p)
 end
