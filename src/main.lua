@@ -1,3 +1,6 @@
+
+require 'llama'
+
 -- Contains all the balls.
 balls = {}
 ground = {}
@@ -31,7 +34,7 @@ function love.load()
 
     -- Create the world.
     world = love.physics.newWorld(2000, 2000)
-    world:setGravity(0, 40)
+    world:setGravity(0, 1800)
 
     -- callbacks
     world:setCallbacks(collide, touch, untouch, result)
@@ -53,15 +56,7 @@ function love.load()
     end
 
     -- llama
-    llama.b = love.physics.newBody( world, 420, 520, 0)
-    llama.i = images.llama
-    llama.otype = "llama"
-    llama.looking = 1 -- llama is looking left
-    llama.ox = llama.i:getWidth() / 2
-    llama.oy = llama.i:getHeight() / 2
-    llama.s = love.physics.newRectangleShape( llama.b, 0, 0, llama.i:getWidth(), llama.i:getHeight())
-    llama.s:setData(llama)
-    llama.b:setPosition(420, 520)
+    llama = Llama.create(world, 420, 510, images.llama)
 end
 
 function love.update(dt)
@@ -89,14 +84,18 @@ function love.update(dt)
 
     -- input
     if love.keyboard.isDown("left") then
-      flip_llama("left")
+      llama:flip("left")
+      llama:move_left()
     end
     if love.keyboard.isDown("right") then
-      flip_llama("right")
+      llama:flip("right")
+      llama:move_right()
     end
-    if love.keyboard.isDown("space") then
-      print("space")
+    if love.keyboard.isDown("up") then
+      llama:move_up()
     end
+
+    llama:update()
 end
 
 function love.draw()
@@ -121,7 +120,7 @@ function love.draw()
         love.graphics.draw(v.i, v.b:getX(), v.b:getY(), v.b:getAngle(), 1, 1, v.ox, v.oy)
     end
 
-    love.graphics.draw(llama.i, llama.b:getX(), llama.b:getY(), 0 , llama.looking, 1, llama.ox, llama.oy)
+    llama:draw()
 
     for i,v in ipairs(systems) do
         love.graphics.draw(v, 0, 0)
@@ -132,6 +131,7 @@ function addisland(x, y, r)
   local t = {}
   t.r = 25
 	t.b = love.physics.newBody(world, x, y)
+  t.b:setAllowSleeping(true)
 	t.s = love.physics.newCircleShape(t.b, t.r)
   t.otype = "island"
 	t.i = images.island
@@ -150,7 +150,9 @@ function addball(def, num)
       t.otype = "object"
       t.ox = def.ox
       t.oy = def.oy
-      t.b:setMassFromShapes()
+      t.b:setLinearDamping(9)
+      t.b:setMass(0, 0, 0.001, 0.001)
+      t.b:setAllowSleeping(true)
       t.s:setData(t)
       table.insert(balls, t)
     end
@@ -202,12 +204,4 @@ function explosion(x, y)
 	p:setTangentialAcceleration(1000)
 	p:start()
  table.insert(systems, p)
-end
-
-function flip_llama(orientation)
-  if (llama.looking == 1 and orientation == "right") then
-    llama.looking = -1
-  elseif (llama.looking == -1 and orientation == "left") then
-    llama.looking = 1
-  end
 end
