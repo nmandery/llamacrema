@@ -39,6 +39,11 @@ function Llama:update()
     self.b:setX(love.graphics.getWidth()-5-self.ox)
     --self.b:applyImpulse(0, 0, 50, 0)
   end
+
+  if (self.b:getY() == self.y_null) then
+    vx, vy = self.b:getLinearVelocity()
+    self.b:setLinearVelocity(vx, 0)
+  end
 end
 
 function Llama:flip(ornt)
@@ -64,9 +69,9 @@ end
 
 function Llama:move_up()
   if not self.y_null then
-    self.y_null = self.b:getY()
+    self.y_null = self.b:getY()-5
   end
-  if self.y_null <= self.b:getY()+5 then --only allow jumping if standing on the ground
+  if self.y_null <= self.b:getY() then --only allow jumping if standing on the ground
   --self.b:applyForce( 0, -1200, self.b:getX(), self.b:getY() )
     self.b:applyImpulse( 0, -480, self.b:getX(), self.b:getY() )
   end

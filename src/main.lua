@@ -108,7 +108,7 @@ function love.draw()
     -- infos / stats
 		love.graphics.print(points .. " Pts", 730, 30);
     -- draw the ground -- only for debugging
-    --love.graphics.polygon("line", ground.s:getPoints())
+    -- love.graphics.polygon("line", ground.s:getPoints())
 
     --draw islands
     for i,v in ipairs(islands) do
@@ -131,7 +131,7 @@ function addisland(x, y, r)
   local t = {}
   t.r = 25
 	t.b = love.physics.newBody(world, x, y)
-  t.b:setAllowSleeping(true)
+  --t.b:setAllowSleeping(true)
 	t.s = love.physics.newCircleShape(t.b, t.r)
   t.otype = "island"
 	t.i = images.island
@@ -150,8 +150,12 @@ function addball(def, num)
       t.otype = "object"
       t.ox = def.ox
       t.oy = def.oy
+      --t.b:setMassFromShapes()
       t.b:setLinearDamping(9)
       t.b:setMass(0, 0, 0.001, 0.001)
+
+      --t.b:setLinearDamping(8)
+      --t.b:setMass(0, 0, 15, 12)
       t.b:setAllowSleeping(true)
       t.s:setData(t)
       table.insert(balls, t)
