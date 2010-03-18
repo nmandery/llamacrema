@@ -10,6 +10,7 @@ function Llama.create(w, x, y, img)
     llama.otype = "llama"
     llama.looking = 1 -- llama is looking left
     llama.y_null = nil
+    llama.health = 100
     llama.ox = llama.i:getWidth() / 2
     llama.oy = llama.i:getHeight() / 2
     llama.s = love.physics.newRectangleShape( llama.b, 0, 0, llama.i:getWidth(), llama.i:getHeight())
@@ -74,5 +75,15 @@ function Llama:move_up()
   if self.y_null <= self.b:getY() then --only allow jumping if standing on the ground
   --self.b:applyForce( 0, -1200, self.b:getX(), self.b:getY() )
     self.b:applyImpulse( 0, -480, self.b:getX(), self.b:getY() )
+  end
+end
+
+function Llama:mod_health(value)
+  if value<0 and (self.health+value<0) then
+    self.health = 0
+  elseif value>0 and (self.health+value>100) then
+    self.health = 100
+  else
+    self.health = self.health + value
   end
 end
