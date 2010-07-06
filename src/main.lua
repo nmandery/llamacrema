@@ -30,8 +30,6 @@ function love.load()
 		{ i = images.schlagsahne, 	r = 46 , ox = 48, oy = 48},
     }
    
-    
-
     -- Create the world.
     world = love.physics.newWorld(2000, 2000)
     world:setGravity(0, 1800)
@@ -150,9 +148,9 @@ function addball(def, num)
       t.otype = "object"
       t.ox = def.ox
       t.oy = def.oy
-      --t.b:setMassFromShapes()
-      t.b:setLinearDamping(9)
-      t.b:setMass(0, 0, 0.001, 0.001)
+      t.b:setMassFromShapes()
+      --t.b:setLinearDamping(9)
+      --t.b:setMass(0, 0, 0.001, 0.001)
 
       --t.b:setLinearDamping(8)
       --t.b:setMass(0, 0, 15, 12)
